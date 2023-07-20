@@ -1,138 +1,83 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import Users from '../models/UsersModel';
-import UserService from '../services/UsersServices';
-import PwdToken from '../services/PwdToken';
-
-const secret = process.env.JWTSECRET;
+import Service from '../services/UsersServices';
 
 class UsersController {
-  async validate(req, res) {
-    // next();
-    return res.send('ok');
-  }
+  async create(req, res) {
+    const { name, email, password, role, status } = req.body;
 
-  async login(req, res) {
-    const { email, password } = req.body;
-
-    const user = await PwdToken.findByEmail(email);
-
-    if (user.length > 0) {
-      const result = await bcrypt.compare(password, user[0].password);
-      if (result) {
-        const token = jwt.sign(
-          {
-            email: user[0].email,
-            role: user[0].role,
-          },
-          secret,
-          { expiresIn: '48h' }
-        );
-
-        res.status(200);
-        return res.json({ token, role: user[0].role });
+    try {
+      if (email == undefined || email.length < 0) {
+        res.status(406);
+        return res.json({ err: 'E-mail inválido!' });
       }
-      res.status(406);
-      return res.json({ err: 'Senha incorreta!' });
-    }
-    res.status(406);
-    return res.json({ err: 'Usuário não existe!' });
-  }
 
-  async changePwd(req, res) {
-    const { token, password } = req.body;
-    const isTokenValid = await PwdToken.validate(token);
+      const emailExists = await Service.findEmail(email);
+      if (emailExists) {
+        res.status(406);
+        return res.json({ err: 'E-mail existente!' });
+      }
 
-    if (isTokenValid.status) {
-      await UserService.changePassword(password, isTokenValid.token.user_id, isTokenValid.token.token);
-      return res.send('Senha alterada!');
-    }
-    res.status(406);
-    return res.send(isTokenValid.err);
-  }
+      const emailValido = await Service.isEmail(email);
+      if (!emailValido) {
+        res.status(406);
+        return res.json({ err: 'E-mail inválido!' });
+      }
 
-  async recoverPwd(req, res) {
-    const { email } = req.body;
-
-    const result = await PwdToken.create(email);
-    if (result.status) {
-      res.send(result.token.toString());
-
-      // TODO
-      /* envio de email do token */
-      // NodeMailer.send();
-    } else {
-      res.status(406);
-      res.send(result.err);
+      const user = await Service.new(email, password, name, role, status);
+      return res.json(user);
+    } catch (err) {
+      throw err;
     }
   }
 
-  async removeUser(req, res) {
-    const { id } = req.params;
-    const result = await UserService.delete(id);
-    if (result.status) return res.send('Tudo OK!');
-    res.status(406);
-    return res.send(result.err);
+  async list(req, res) {
+    try {
+      const users = await Service.findAll();
+      if (!users) {
+        res.status(404);
+        return res.json({ err: 'Usuários não cadastrados!' });
+      }
+      return res.json(users);
+    } catch (err) {
+      throw err;
+    }
   }
 
-  async editUser(req, res) {
+  async listOne(req, res) {
+    try {
+      const { id } = req.params;
+      const user = await Service.findById(id);
+      if (!user) {
+        res.status(404);
+        return res.json({ err: 'Usuário inexistente!' });
+      }
+      return res.json({ user });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async edit(req, res) {
     const { id, email, password, name, role, status } = req.body;
 
-    const result = await UserService.update(id, email, password, name, role, status);
+    const user = await Service.update(id, email, password, name, role, status);
 
-    if (result != undefined) {
-      if (result.status) {
-        return res.send('Tudo OK!');
+    if (user != undefined) {
+      if (user.status) {
+        return res.json(user);
       }
       res.status(406);
-      return res.send(result.err);
+      return res.send(user.err);
     }
     res.status(406);
     return res.send('Ocorreu um erro no servidor!');
   }
 
-  async indexUsers(req, res) {
-    const users = await UserService.findAll();
-    if (!users) {
-      res.status(404);
-      res.json({ err: 'Usuários não cadastrados!' });
-      return;
-    }
-    return res.json({ users });
-  }
-
-  async userId(req, res) {
+  async remove(req, res) {
     const { id } = req.params;
-    const users = await UserService.findById(id);
-    if (!users) {
-      res.status(404);
-      return res.json({ err: 'Usuário inexistente!' });
-    }
-    return res.json({ users });
-  }
-
-  async createUser(req, res) {
-    const { name, email, password, role, status } = req.body;
-
-    if (email == undefined || email == '' || email == ' ') {
-      res.status(406);
-      return res.json({ err: 'E-mail inválido!' });
-    }
-
-    const emailExists = await UserService.findEmail(email);
-    if (emailExists) {
-      res.status(406);
-      return res.json({ err: 'E-mail existente!' });
-    }
-
-    const emailValido = await UserService.isEmail(email);
-    if (!emailValido) {
-      res.status(406);
-      return res.json({ err: 'E-mail inválido!' });
-    }
-
-    await UserService.new(email, password, name, role, status);
-    return res.send('Tudo OK!');
+    const result = await Service.delete(id);
+    if (result.status) return res.json(result.msg);
+    res.status(406);
+    return res.json(result.err);
   }
 }
 
