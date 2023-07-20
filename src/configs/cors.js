@@ -1,4 +1,4 @@
-const cors = require('cors');
+import cors from 'cors';
 
 const whiteList = ['http://localhost:3000'];
 

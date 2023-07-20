@@ -1,6 +1,6 @@
-const bcrypt = require('bcryptjs');
-const validator = require('validator');
-const PwdToken = require('./PwdToken');
+import bcrypt from 'bcrypt';
+import validator from 'validator';
+import PwdToken from './PwdToken';
 
 class User {
   async new(email, password, name, role, status) {

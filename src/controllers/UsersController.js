@@ -1,7 +1,8 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const PwdToken = require('../models/PwdToken');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import Users from '../models/UsersModel';
+import UserService from '../services/UsersServices';
+import PwdToken from '../services/PwdToken';
 
 const secret = process.env.JWTSECRET;
 
@@ -43,7 +44,7 @@ class UsersController {
     const isTokenValid = await PwdToken.validate(token);
 
     if (isTokenValid.status) {
-      await User.changePassword(password, isTokenValid.token.user_id, isTokenValid.token.token);
+      await UserService.changePassword(password, isTokenValid.token.user_id, isTokenValid.token.token);
       return res.send('Senha alterada!');
     }
     res.status(406);
@@ -57,6 +58,7 @@ class UsersController {
     if (result.status) {
       res.send(result.token.toString());
 
+      // TODO
       /* envio de email do token */
       // NodeMailer.send();
     } else {
@@ -67,7 +69,7 @@ class UsersController {
 
   async removeUser(req, res) {
     const { id } = req.params;
-    const result = await User.delete(id);
+    const result = await UserService.delete(id);
     if (result.status) return res.send('Tudo OK!');
     res.status(406);
     return res.send(result.err);
@@ -76,7 +78,7 @@ class UsersController {
   async editUser(req, res) {
     const { id, email, password, name, role, status } = req.body;
 
-    const result = await User.update(id, email, password, name, role, status);
+    const result = await UserService.update(id, email, password, name, role, status);
 
     if (result != undefined) {
       if (result.status) {
@@ -90,7 +92,7 @@ class UsersController {
   }
 
   async indexUsers(req, res) {
-    const users = await User.findAll();
+    const users = await UserService.findAll();
     if (!users) {
       res.status(404);
       res.json({ err: 'Usuários não cadastrados!' });
@@ -101,7 +103,7 @@ class UsersController {
 
   async userId(req, res) {
     const { id } = req.params;
-    const users = await User.findById(id);
+    const users = await UserService.findById(id);
     if (!users) {
       res.status(404);
       return res.json({ err: 'Usuário inexistente!' });
@@ -117,19 +119,19 @@ class UsersController {
       return res.json({ err: 'E-mail inválido!' });
     }
 
-    const emailExists = await User.findEmail(email);
+    const emailExists = await UserService.findEmail(email);
     if (emailExists) {
       res.status(406);
       return res.json({ err: 'E-mail existente!' });
     }
 
-    const emailValido = await User.isEmail(email);
+    const emailValido = await UserService.isEmail(email);
     if (!emailValido) {
       res.status(406);
       return res.json({ err: 'E-mail inválido!' });
     }
 
-    await User.new(email, password, name, role, status);
+    await UserService.new(email, password, name, role, status);
     return res.send('Tudo OK!');
   }
 }

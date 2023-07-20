@@ -1,8 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const HomeController = require('./controllers/HomeController');
-const UsersController = require('./controllers/UsersController');
-const AuthAdmin = require('./middlewares/AdminAuth');
+import { Router } from 'express';
+import HomeController from './controllers/HomeController';
+import UsersController from './controllers/UsersController';
+import AuthAdmin from './middlewares/AdminAuth';
+
+const router = new Router();
 
 router.get('/', HomeController.index);
 router.get('/users', AuthAdmin, UsersController.indexUsers);
