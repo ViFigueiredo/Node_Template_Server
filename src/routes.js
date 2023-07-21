@@ -1,22 +1,21 @@
 import { Router } from 'express';
 import HomeController from './controllers/HomeController';
 import UsersController from './controllers/UsersController';
-// import AuthController from './controllers/AuthController';
-// import AuthAdmin from './middlewares/AdminAuth';
 
 const router = new Router();
 
+/* ROTAS -> API INDEX */
 router.get('/', HomeController.index);
 
-router.post('/users', UsersController.create);
-router.get('/users', UsersController.list);
-router.get('/users/:id', UsersController.listOne);
-router.put('/users', UsersController.edit);
-router.delete('/users/:id', UsersController.remove);
-
-// router.post('/auth/recoverpwd', AuthController.recoverPwd);
-// router.post('/auth/changepwd', AuthController.changePwd);
-// router.post('/auth/login', AuthController.login);
-// router.post('/validate', AuthAdmin, AuthController.validate);
+/* ROTAS -> API USUÁRIOS */
+router.get('/users', UsersController.indexUsers);
+router.get('/users/:id', UsersController.userId);
+router.post('/users', UsersController.createUser);
+router.put('/users', UsersController.editUser);
+router.delete('/users/:id', UsersController.removeUser);
+router.post('/auth/recoverpwd', UsersController.recoverPwd);
+router.post('/auth/changepwd', UsersController.changePwd);
+router.post('/auth/login', UsersController.login);
+router.post('/validate', UsersController.validate);
 
 module.exports = router;

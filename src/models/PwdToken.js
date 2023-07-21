@@ -1,7 +1,11 @@
+const knex = require('../../knexfile');
+
 class PasswordToken {
+  /* CRIAÇÃO DO TOKEN */
   async create(email) {
     try {
       const user = await this.findByEmail(email);
+      // console.log(user);
       if (user) {
         const token = Date.now();
         await knex
@@ -28,6 +32,7 @@ class PasswordToken {
     }
   }
 
+  /* VALIDAÇÃO DO TOKEN */
   async validate(token) {
     try {
       const result = await knex.select().where({ token }).table('pwd_tokens');
@@ -53,6 +58,7 @@ class PasswordToken {
     }
   }
 
+  /* SETA O TOKEN COMO UTILIZADO */
   async setUsed(token) {
     try {
       return await knex.update({ used: 1 }).where({ token }).table('pwd_tokens');

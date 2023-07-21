@@ -1,6 +1,6 @@
 class HomeController {
   async index(req, res) {
-    return res.json('Bem-vindo a página inicial da API.');
+    res.send('Bem-vindo a página inicial da API.');
   }
 }
 

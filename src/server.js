@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
-import app from './app';
-
 dotenv.config();
+
+import app from './app';
 
 const port = process.env.APP_PORT || 3000;
 const host = process.env.APP_HOST || 'http://localhost';
