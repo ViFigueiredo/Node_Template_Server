@@ -1,5 +1,12 @@
 ## Sobre:
-Template de API REST utilizando KnexJS e MSSQL Server
+Template de API REST utilizando NodeJS, KnexJS, MSSQL Server e Testes.
+
+## Funcionalidades:
+- Autenticação (Em breve)
+- Autorização (Em breve)
+- Rotas de usuários
+- Upload de arquivos
+- Segurança da aplicação (Cors + Helmet + Env)
 
 ## Tecnologias:
 - Nodejs + Express (Backend)
