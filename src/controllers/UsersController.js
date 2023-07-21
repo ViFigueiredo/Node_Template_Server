@@ -1,7 +1,7 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/Users');
-const PwdToken = require('../models/PwdToken');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import User from '../models/Users';
+import PwdToken from '../models/PwdToken';
 
 /* JWT SECRET */
 const secret = 'dç~ksaçiep0384e09qwipile-0qielx-02-=exo0ei-0ier9i=0w- xi-';

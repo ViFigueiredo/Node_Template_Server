@@ -1,4 +1,4 @@
-const knex = require('../../knexfile');
+import knex from '../../knexfile';
 
 class PasswordToken {
   /* CRIAÇÃO DO TOKEN */

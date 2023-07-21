@@ -1,7 +1,7 @@
-const bcrypt = require('bcrypt');
-const validator = require('validator');
-const knex = require('../configs/knexjs');
-const PwdToken = require('./PwdToken');
+import bcrypt from'bcrypt';
+import validator from'validator';
+import knex from'../configs/knexjs';
+import PwdToken from'./PwdToken';
 
 // console.log(knex);
 
