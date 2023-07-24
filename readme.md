@@ -28,6 +28,6 @@ npm run test ou yarn test
 npx knex migrate:lastest (todas)  
 npx knex migrate:up <tabela> (específica)
 
--> Desfazer tabelas no banco de dados
+-> Desfazer tabelas no banco de dados  
 npx knex migrate:rollback --all  
 npx knex migrate:down <tabela> (específica)
