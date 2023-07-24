@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import upload from './configs/multer';
 import HomeController from './controllers/HomeController';
 import UsersController from './controllers/UsersController';
 
@@ -17,5 +18,10 @@ router.post('/auth/recoverpwd', UsersController.recoverPwd);
 router.post('/auth/changepwd', UsersController.changePwd);
 router.post('/auth/login', UsersController.login);
 router.post('/validate', UsersController.validate);
+
+/* ROTA -> UPLOAD DE ARQUIVOS */
+router.post('/upload', upload.array('files', 10), (req, res) => {
+  res.send('Arquivo recebido...');
+});
 
 module.exports = router;
