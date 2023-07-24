@@ -18,16 +18,16 @@ Template de API REST utilizando NodeJS, KnexJS, MSSQL Server e Testes.
 npm i
 
 ## Executar projeto:
-npm run dev ou yarn dev
+npm run dev
 
 ## Testes de rotas do projeto:
-npm run test ou yarn test
+npm run test
 
 ## knexJS:
--> Criar tabelas no banco de dados
-npx knex migrate:lastest (todas)
+-> Criar tabelas no banco de dados  
+npx knex migrate:lastest (todas)  
 npx knex migrate:up <tabela> (específica)
 
--> Desfazer tabelas no banco de dados
-npx knex migrate:rollback --all
+-> Desfazer tabelas no banco de dados  
+npx knex migrate:rollback --all  
 npx knex migrate:down <tabela> (específica)
