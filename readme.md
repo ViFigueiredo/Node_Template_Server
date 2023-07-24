@@ -24,10 +24,10 @@ npm run dev ou yarn dev
 npm run test ou yarn test
 
 ## knexJS:
--> Criar tabelas no banco de dados
-npx knex migrate:lastest (todas)
+-> Criar tabelas no banco de dados  
+npx knex migrate:lastest (todas)  
 npx knex migrate:up <tabela> (específica)
 
 -> Desfazer tabelas no banco de dados
-npx knex migrate:rollback --all
+npx knex migrate:rollback --all  
 npx knex migrate:down <tabela> (específica)
